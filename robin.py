@@ -19,7 +19,7 @@ def get_options(symbols, exp_date):
         og = sys.stdout
         sys.stdout = devNull
         set_output(devNull)
-        resp = find_options_by_expiration(symbols, exp_date)
+        resp = opts.find_options_by_expiration(symbols, exp_date)
         sys.stdout = og
         set_output(og)
     
