@@ -8,6 +8,23 @@ import pandas as pd
 import robin_stocks.options as opts
 from robin_stocks.helper import set_output
 
+def get_options(symbols, exp_date):
+    if not isinstance(symbols, (str, list)):
+        raise ValueError("symbols should be either a string or a list; got %s"%(type(symbols)))
+    
+    if not isinstance(exp_date, str):
+        raise ValueError("date should be string; got %s"%(date))
+    
+    with open(os.devnull, 'w') as devNull:
+        og = sys.stdout
+        sys.stdout = devNull
+        set_output(devNull)
+        resp = find_options_by_expiration(symbols, exp_date)
+        sys.stdout = og
+        set_output(og)
+    
+    return pd.DataFrame.from_dict(resp)
+
 def get_profitable(symbols, date, profit_type='short', min_percent=0.0, max_percent=1.0):
     """
     Parameters
@@ -25,6 +42,9 @@ def get_profitable(symbols, date, profit_type='short', min_percent=0.0, max_perc
     """
     if not isinstance(symbols, (str, list)):
         raise ValueError("symbols should be either a string or a list; got %s"%(type(symbols)))
+    
+    if not isinstance(date, str):
+        raise ValueError("date should be string; got %s"%(date))
     
     if profit_type not in ('short', 'long'):
         raise ValueError("profit_type should be either 'short' or 'long'; got %s"%profit_type)
